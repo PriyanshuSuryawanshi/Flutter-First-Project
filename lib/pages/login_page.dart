@@ -5,9 +5,16 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  String name = "";
+  bool changeButton = false;
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -26,8 +33,8 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               const Gap(20),
-              const Text(
-                "Welcome To Login Screen!",
+              Text(
+                "Welcome $name",
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
               const Gap(20),
@@ -39,6 +46,10 @@ class LoginPage extends StatelessWidget {
                       textCapitalization: TextCapitalization.words,
                       decoration: const InputDecoration(
                           hintText: "Enter Username", labelText: "Username"),
+                      onChanged: (value) {
+                        name = value;
+                        setState(() {});
+                      },
                     ),
                     TextFormField(
                       obscureText: true,
@@ -46,16 +57,37 @@ class LoginPage extends StatelessWidget {
                           hintText: "Enter Password", labelText: "Password"),
                     ),
                     Gap(30),
-                    ElevatedButton(
-                      onPressed: () {
+                    InkWell(
+                      onTap: () async {
+                        setState(() {
+                          changeButton = true;
+                        });
+                        await Future.delayed(Duration(milliseconds: 450));
                         Navigator.pushNamed(context, MyRoutes.homeRoute);
                       },
-                      child: Text(
-                        "Login",
-                        style: TextStyle(fontSize: 17),
+                      child: AnimatedContainer(
+                        height: 40,
+                        duration: Duration(milliseconds: 450),
+                        width: changeButton ? 50 : 150,
+                        alignment: Alignment.center,
+                        child: changeButton
+                            ? Icon(
+                                Icons.done_rounded,
+                                color: Colors.white,
+                              )
+                            : Text(
+                                "Login",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                        decoration: BoxDecoration(
+                            color: Colors.deepPurple,
+                            borderRadius:
+                                BorderRadius.circular(changeButton ? 60 : 10)),
                       ),
-                      style: TextButton.styleFrom(minimumSize: Size(150, 40)),
-                    )
+                    ),
                   ],
                 ),
               )
